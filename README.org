@@ -16,7 +16,7 @@ Reading from a TOML config will be added very soon.
 ** Requirements:
 + Python 3.5+
 + The APScheduler library for python (install python-apscheduler on most Linux distributions, otherwise, install apscheduler with pip or your preferred python package manager of choice)
-> feh
++ feh
 
 ** How to install it?
 + Clone this git repo
@@ -30,7 +30,7 @@ touch ~/.local/share/wallman/wallman.log
 + Profit
 
 ** TODO:
-- Add support for reading from a TOML config files (Should be added very soon)
+- Add support for reading from a TOML config file (Should be added very soon)
 - Add support for setting wallpapers that change with the weather
 - Add support for live wallpapers
 - Drop the feh dependency and use python-xlib and pywlroots instead
