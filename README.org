@@ -1,0 +1,36 @@
+#+TITLE: Readme
+#+AUTHOR: Emma Nora Theuer
+
+* Wallman
+** What is this?
+This is my project wallman. Wallman is a simple and minimalistic python script used for setting Dynamic Wallpapers on minimalist X11 Window Managers and Wayland compositors.
+The version you are currently looking at is an old prototype. It hardcodes the wallpaper sets and locations of the wallpapers as well as changing times in source code. As such, it's a hassle to configure. This should be replaced with the new version soon.
+
+** What can it do?
+Wallman currently has two main features:
++ Choosing from a set of Wallpapers and then setting the rest of the wallpapers accordingly
++ Settings Wallpapers at a specific time of the day
+
+Reading from a TOML config will be added very soon.
+
+** Requirements:
++ Python 3.5+
++ The APScheduler library for python (install python-apscheduler on most Linux distributions, otherwise, install apscheduler with pip or your preferred python package manager of choice)
+> feh
+
+** How to install it?
++ Clone this git repo
++ Write a .desktop file or add a shebang to the beginning and then add it to /usr/bin
++ Create a log file:
+#+BEGIN_SRC shell
+mkdir -p ~/.local/share/wallman
+touch ~/.local/share/wallman/wallman.log
+#+END_SRC
++ Replace all the hardcoded things with your wallpapers and wallpaper sets (Optionally, replace the loglevel because you probably don't want debug)
++ Profit
+
+** TODO:
+- Add support for reading from a TOML config files (Should be added very soon)
+- Add support for setting wallpapers that change with the weather
+- Add support for live wallpapers
+- Drop the feh dependency and use python-xlib and pywlroots instead
