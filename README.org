@@ -57,6 +57,7 @@ The keys in the dictionary once again do not matter, the names of the keys in ea
 + Write unittests
 + Write a setup.py
 + Improve the general directory layout
++ Add documentation for developers
 
 ** Technical Details
 + Improve Modularity
