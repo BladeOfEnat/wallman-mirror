@@ -9,7 +9,7 @@ from apscheduler.triggers.cron import CronTrigger
 # setup logging
 chdir(str(getenv("HOME")) + "/.local/share/wallman/")
 logger = logging.getLogger(__name__)
-logging.basicConfig(filename="wallman.log", encoding="utf-8", level=logging.DEBUG)
+logging.basicConfig(filename="wallman.log", encoding="utf-8", level=logging.WARNING)
 
 # read config
         # a = list(data["changing_times"].values())
