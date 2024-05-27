@@ -41,7 +41,6 @@ class _ConfigLib:
 class ConfigValidity(_ConfigLib):
     def __init__(self):
         super().__init__()
-        self.chosen_wallpaper_set = False
 
     def _check_wallpapers_per_set_and_changing_times(self) -> None:
         # Check if the amount of wallpapers_per_set and given changing times match
@@ -84,6 +83,7 @@ class ConfigValidity(_ConfigLib):
 class WallpaperLogic(_ConfigLib):
     def __init__(self):
         super().__init__()
+        self.chosen_wallpaper_set = False
 
     # Returns a list of a split string that contains a changing time from the config file
     def _clean_times(self, desired_time) -> list:
