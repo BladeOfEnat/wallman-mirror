@@ -6,10 +6,6 @@ from datetime import datetime, time
 from apscheduler.schedulers.blocking import BlockingScheduler
 from apscheduler.triggers.cron import CronTrigger
 
-# Setting up essential variables
-global chosen_wallpaper_set
-chosen_wallpaper_set = False
-
 # setup logging
 chdir(str(getenv("HOME")) + "/.local/share/wallman/")
 logger = logging.getLogger(__name__)
@@ -45,6 +41,7 @@ class _ConfigLib:
 class ConfigValidity(_ConfigLib):
     def __init__(self):
         super().__init__()
+        self.chosen_wallpaper_set = False
 
     def _check_wallpapers_per_set_and_changing_times(self) -> None:
         # Check if the amount of wallpapers_per_set and given changing times match
@@ -88,17 +85,18 @@ class WallpaperLogic(_ConfigLib):
     def __init__(self):
         super().__init__()
 
+    # Returns a list of a split string that contains a changing time from the config file
     def _clean_times(self, desired_time) -> list:
         unclean_times = list(self.config_changing_times.values())[desired_time]
         return unclean_times.split(":")
 
     def _choose_wallpaper_set(self) -> None:
         from random import choice as choose_from
-        global chosen_wallpaper_set
-        chosen_wallpaper_set = choose_from(self.config_used_sets)
-        self.wallpaper_list = list(self.config_file[chosen_wallpaper_set].values())
-        logger.debug(f"Chose wallpaper set {chosen_wallpaper_set}")
+        self.chosen_wallpaper_set = choose_from(self.config_used_sets)
+        self.wallpaper_list = list(self.config_file[self.chosen_wallpaper_set].values())
+        logger.debug(f"Chose wallpaper set {self.chosen_wallpaper_set}")
 
+    # Verify if a given time is in a given range
     def _time_in_range(self, start, end, x) -> bool:
         if start <= end:
             return start <= x <= end
@@ -106,7 +104,8 @@ class WallpaperLogic(_ConfigLib):
             return start <= x or x < end
 
     def set_wallpaper_by_time(self) -> None:
-        if chosen_wallpaper_set is False:
+        # Ensure use of a consistent wallpaper set
+        if self.chosen_wallpaper_set is False:
             self._choose_wallpaper_set()
         for time_range in range(self.config_total_changing_times - 1):
             clean_time = self._clean_times(time_range)
@@ -121,6 +120,7 @@ class WallpaperLogic(_ConfigLib):
 
     def schedule_wallpapers(self):
         scheduler = BlockingScheduler()
+        # Create a scheduled job for every changing time
         for changing_time in range(len(self.config_changing_times)):
             clean_time = self._clean_times(changing_time)
             scheduler.add_job(self.set_wallpaper_by_time, trigger=CronTrigger(hour=clean_time[0], minute=clean_time[1], second=clean_time[2]))
