@@ -1,9 +1,10 @@
 # Here, define if you want to use different sets of wallpapers, and if yes,
 # what those sets are called and how many wallpapers are included per set.
-[wallpaper_sets]
+[general]
 enabled = true
 used_sets = ["anime", "nature"]
 wallpapers_per_set = 5
+notify = False
 
 # Enter the hours at which you want the wallpaper to change.
 # If the script is called between one of this times, it will go back to the previous time.
