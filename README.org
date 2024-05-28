@@ -15,7 +15,7 @@ Wallman currently has three main features:
 
 * Installation
 ** Depedencies
-*** Alwaus Required
+*** Always Required
 + Python 3.11 or newer (Required because of tomllib)
 + APScheduler (Install python-apscheduler or APScheduler, depending on the package manager)
 + feh (Used for setting the wallpapers, hard dependency)
@@ -32,7 +32,8 @@ mkdir -p ~/.config/wallman
 touch ~/.local/share/wallman/wallman.log
 cp sample_config.toml ~/.config/wallman/wallman.toml
 #+END_SRC
-+ Adjust the loglevel to your liking. This will be part of the config or a command line argument soon.
++ Edit the sample config
++ (Optional): Adjust the loglevel to your liking. This will be part of the config or a command line argument soon.
 + Profit
 
 * Configuration
@@ -40,7 +41,7 @@ This is a short guide on how to correctly configure wallman. Look in the sample 
 ** TOML Dictionaries
 First of all, the config file is structured via different TOML dictionaries. There are two TOML dictionaries: general and changing_times that must be present in every config. Aside from that, further dictionaries are needed depending on how wallman is configured. You need to create a dictionary with the name of each wallpaper set defined in the used_sets list (more on that later). You should probably just configure wallman by editing the sample config as it is by far the easiest way to do it.
 *** general
-In wallpaper_sets, you need to always define 3 variables:
+In general, you need to always define 3 variables and you can optionally add one more:
 + enabled: bool
     A simple switch that states if you want to use different sets of wallpapers or not.
 + used_sets: list
