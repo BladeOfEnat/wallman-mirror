@@ -33,7 +33,7 @@ class _ConfigLib:
         self.config_general: dict = self.config_file["general"]
         self.config_changing_times: dict = self.config_file["changing_times"]
         # Values in Dicts
-        self.config_wallpaper_sets_enabled: bool = self.config_general["enabled"]
+        self.config_wallpaper_sets_enabled: bool = self.config_general["enable_wallpaper_sets"]
         self.config_used_sets: list = self.config_general["used_sets"]
         self.config_wallpapers_per_set: int = self.config_general["wallpapers_per_set"]
         self.config_total_changing_times: int = len(self.config_changing_times)

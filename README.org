@@ -42,7 +42,7 @@ This is a short guide on how to correctly configure wallman. Look in the sample 
 First of all, the config file is structured via different TOML dictionaries. There are two TOML dictionaries: general and changing_times that must be present in every config. Aside from that, further dictionaries are needed depending on how wallman is configured. You need to create a dictionary with the name of each wallpaper set defined in the used_sets list (more on that later). You should probably just configure wallman by editing the sample config as it is by far the easiest way to do it.
 *** general
 In general, you need to always define 3 variables and you can optionally add one more:
-+ enabled: bool
++ enable_wallpaper_sets: bool
     A simple switch that states if you want to use different sets of wallpapers or not.
 + used_sets: list
     A list that includes the names of the wallpaper sets you want to use. If you want to use only one, the list should have one entry.
