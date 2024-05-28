@@ -9,7 +9,7 @@ from apscheduler.triggers.cron import CronTrigger
 # setup logging
 chdir(str(getenv("HOME")) + "/.local/share/wallman/")
 logger = logging.getLogger(__name__)
-logging.basicConfig(filename="wallman.log", encoding="utf-8", level=logging.WARNING)
+logging.basicConfig(filename="wallman.log", encoding="utf-8", level=logging.DEBUG)
 
 # read config
         # a = list(data["changing_times"].values())
@@ -30,13 +30,17 @@ class _ConfigLib:
     def __init__(self):
         self.config_file: dict = self._initialize_config() # Full config
         # Dictionaries
-        self.config_wallpaper_sets: dict = self.config_file["wallpaper_sets"]
+        self.config_general: dict = self.config_file["general"]
         self.config_changing_times: dict = self.config_file["changing_times"]
         # Values in Dicts
-        self.config_wallpaper_sets_enabled: bool = self.config_wallpaper_sets["enabled"]
-        self.config_used_sets: list = self.config_wallpaper_sets["used_sets"]
-        self.config_wallpapers_per_set: int = self.config_wallpaper_sets["wallpapers_per_set"]
+        self.config_wallpaper_sets_enabled: bool = self.config_general["enabled"]
+        self.config_used_sets: list = self.config_general["used_sets"]
+        self.config_wallpapers_per_set: int = self.config_general["wallpapers_per_set"]
         self.config_total_changing_times: int = len(self.config_changing_times)
+        try:
+            self.config_notify = self.config_general["notify"]
+        except KeyError:
+            self.config_notify = False
 
 class ConfigValidity(_ConfigLib):
     def __init__(self):
@@ -50,10 +54,10 @@ class ConfigValidity(_ConfigLib):
             logger.error("The amount of changing times and the amount of wallpapers per set does not match.")
             raise ConfigError("Please provide an amount of changing_times equal to wallpapers_per_set.")
 
-    def _check_wallpaper_sets_validity(self) -> None:
-        if len(self.config_wallpaper_sets) != 3:
-            logger.error("An insufficient amount of parameters for wallpaper_sets has been provided, exiting...")
-            raise ConfigError("wallpaper_sets should have exactly 3 elements")
+    def _check_general_validity(self) -> None:
+        if len(self.config_general) < 3:
+            logger.error("An insufficient amount of parameters for general has been provided, exiting...")
+            raise ConfigError("general should have at least 3 elements")
 
     def _check_wallpaper_dicts(self)-> None:
         # This block checks if a dictionary for each wallpaper set exists
@@ -75,7 +79,7 @@ class ConfigValidity(_ConfigLib):
 
     def validate_config(self) -> None:
         self._check_wallpapers_per_set_and_changing_times()
-        self._check_wallpaper_sets_validity()
+        self._check_general_validity()
         self._check_wallpaper_dicts()
         self._check_wallpaper_amount()
         logger.debug("The config file has been validated successfully (No Errors)")
@@ -103,6 +107,10 @@ class WallpaperLogic(_ConfigLib):
         else:
             return start <= x or x < end
 
+    def _notify_user(self):
+        system("notify-send 'Wallman' 'A new Wallpaper has been set.'")
+        logger.debug("Sent desktop notification.")
+
     def set_wallpaper_by_time(self) -> None:
         # Ensure use of a consistent wallpaper set
         if self.chosen_wallpaper_set is False:
@@ -113,10 +121,15 @@ class WallpaperLogic(_ConfigLib):
             # Check if the current time is between a given and the following changing time and if so, set that wallpaper. If not, keep trying.
             if self._time_in_range(time(int(clean_time[0]), int(clean_time[1]), int(clean_time[2])), time(int(clean_time_two[0]), int(clean_time_two[1]), int(clean_time_two[2])), datetime.now().time()):
                 system(f"feh --bg-scale --no-fehbg {self.wallpaper_list[time_range]}")
+                if self.config_notify:
+                    self._notify_user()
                 return
             else:
                 continue
+
         system(f"feh --bg-scale --no-fehbg {self.wallpaper_list[-1]}")
+        if self.config_notify:
+            self._notify_user()
 
     def schedule_wallpapers(self):
         scheduler = BlockingScheduler()
