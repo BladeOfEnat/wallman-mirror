@@ -14,10 +14,14 @@ Wallman currently has three main features:
 + Settings Wallpapers at a specific time of the day
 
 * Installation
-** Requirements
+** Depedencies
+*** Alwaus Required
 + Python 3.11 or newer (Required because of tomllib)
 + APScheduler (Install python-apscheduler or APScheduler, depending on the package manager)
 + feh (Used for setting the wallpapers, hard dependency)
+*** Optional
++ libnotify (for desktop notification support.)
+
 
 ** How to install it?
 + Clone this git repo
@@ -34,8 +38,8 @@ cp sample_config.toml ~/.config/wallman/wallman.toml
 * Configuration
 This is a short guide on how to correctly configure wallman. Look in the sample config for additional context.
 ** TOML Dictionaries
-First of all, the config file is structured via different TOML dictionaries. There are two TOML dictionaries: wallpaper_sets and changing_times that must be present in every config. Aside from that, further dictionaries are needed depending on how wallman is configured. You need to create a dictionary with the name of each wallpaper set defined in the used_sets list (more on that later). You should probably just configure wallman by editing the sample config as it is by far the easiest way to do it.
-*** wallpaper_sets
+First of all, the config file is structured via different TOML dictionaries. There are two TOML dictionaries: general and changing_times that must be present in every config. Aside from that, further dictionaries are needed depending on how wallman is configured. You need to create a dictionary with the name of each wallpaper set defined in the used_sets list (more on that later). You should probably just configure wallman by editing the sample config as it is by far the easiest way to do it.
+*** general
 In wallpaper_sets, you need to always define 3 variables:
 + enabled: bool
     A simple switch that states if you want to use different sets of wallpapers or not.
@@ -43,6 +47,8 @@ In wallpaper_sets, you need to always define 3 variables:
     A list that includes the names of the wallpaper sets you want to use. If you want to use only one, the list should have one entry.
 + wallpapers_per_set: int
     The amount of wallpapers that you use in each set. It should be an integer.
++ Optional: notify: bool
+    This defaults to "false". Enable to set send a desktop notification when the wallpaper is changed. The program will still work correctly, even if this option is not defined at all.
 
 *** changing_times
 The changing_times dictionary is used to specify the times of the day when your wallpaper is switched. The names of the keys do not matter here, the values must always be strings in the "XX:YY:ZZ" 24 hour time system. use 00:00:00 for midnight. Note that XX should be in the range of 00-23 and YY and ZZ should be in the range of 00-59.
