@@ -41,6 +41,7 @@ class _ConfigLib:
             self.config_notify = self.config_general["notify"]
         except KeyError:
             self.config_notify = False
+            logger.warning("'notify' is not set in dictionary general in the config file, defaulting to 'false'.")
 
 class ConfigValidity(_ConfigLib):
     def __init__(self):
