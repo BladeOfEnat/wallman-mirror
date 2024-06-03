@@ -5,6 +5,7 @@ enable_wallpaper_sets = true
 used_sets = ["anime", "nature"]
 wallpapers_per_set = 5
 notify = False
+fallback_wallpaper = "/path/to/paper"
 
 # Enter the hours at which you want the wallpaper to change.
 # If the script is called between one of this times, it will go back to the previous time.
