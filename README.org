@@ -20,10 +20,21 @@ Wallman currently has three main features:
 + APScheduler (Install python-apscheduler or APScheduler, depending on the package manager)
 + feh (Used for setting the wallpapers, hard dependency)
 *** Optional
-+ libnotify (for desktop notification support.)
++ libnotify (for desktop notification support)
+*** Build dependencies
++ setuptools
++ build
 
+** Installing with pip
+Wallman is available on PYPI. Simply run:
+#+BEGIN_SRC shell
+pip install wallman
+#+END_SRC
 
-** How to install it?
+** Installing with package Manager
+Versions in the AUR and an ebuild for Gentoo will be added soon. A flatpak and Nixpkgs version are on the horizon, too.
+
+** Installing manually
 + Clone this git repo
 + Create a log file and a configuration file:
 #+BEGIN_SRC shell
@@ -64,8 +75,6 @@ The keys in the dictionary once again do not matter, the names of the keys in ea
 *  TODOs
 ** Structuring
 + Write unittests
-+ Write a setup.py
-+ Improve the general directory layout
 + Add documentation for developers
 
 ** Technical Details
