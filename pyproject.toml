@@ -9,7 +9,7 @@ authors = [
     {name = "Emma Nora Theuer", email = "wallman@entheuer.de"},
 ]
 description = "A simple program to set dynamic wallpapers on standalone X11 Windows Managers and Wayland compositors"
-readme = "README"
+readme = "README.md"
 requires-python = ">=3.11"
 keywords = ["Desktop", "Wallpapers"]
 license = {text = "MIT"}
