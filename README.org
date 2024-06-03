@@ -75,6 +75,7 @@ The keys in the dictionary once again do not matter, the names of the keys in ea
 + Drop the feh dependecy and set wallpapers using pywlroots or python-xlib
 
 ** Features
++ Add support for setting a fallback wallpaper if a wallpaper the user set is not found
 + Add support for wallpapers that dynamically change with the time of day (Morning, noon, evening, night or light levels) rather than to times set in the config
 + Add support for wallpapers that change by the weather
 + Add support for live wallpapers
