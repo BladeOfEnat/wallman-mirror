@@ -71,7 +71,6 @@ The keys in the dictionary once again do not matter, the names of the keys in ea
 ** Technical Details
 + Improve Modularity
 + Make the enabled flag in wallpaper_sets actually useful by making the used_sets field optional
-+ Improve output in cases of error
 + Add support for different loglevels in the config file or as a command line argument
 + Drop the feh dependecy and set wallpapers using pywlroots or python-xlib
 
