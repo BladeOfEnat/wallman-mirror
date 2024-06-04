@@ -30,7 +30,7 @@ Wallman currently has three main features:
 *** Gentoo
 This program, as of now, can be installed very easily on gentoo. Just follow these instructions
 #+BEGIN_SRC shell
-git clone https://git.entheuer.de/emma/Dotfiles.git
+git clone https://git.entheuer.de/emma/Wallman.git
 doas eselect repository create wallman
 doas cp -rf Wallman/distfiles/Gentoo/wallman /var/db/repos/
 doas emerge -av wallman
@@ -49,16 +49,19 @@ pip install wallman
 #+END_SRC
 
 ** Installing manually
-+ Clone this git repo
-+ Create a log file and a configuration file:
 #+BEGIN_SRC shell
+git clone https://git.entheuer.de/emma/Wallman.git
+cd Wallman/
 mkdir -p ~/.local/share/wallman
 mkdir -p ~/.config/wallman
 touch ~/.local/share/wallman/wallman.log
 cp sample_config.toml ~/.config/wallman/wallman.toml
+doas cp src/wallman.py /usr/bin/wallman
+doas cp src/wallman_lib.py /usr/bin/wallman_lib.py
+doas chmod +x /usr/bin/wallman
 #+END_SRC
 + Edit the sample config
-+ (Optional): Adjust the loglevel to your liking. This will be part of the config or a command line argument soon.
++ (Optional): Adjust the loglevel in Source Code to your liking.
 + Profit
 
 * Configuration
