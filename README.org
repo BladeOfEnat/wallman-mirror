@@ -28,13 +28,14 @@ Wallman currently has three main features:
 
 ** Installing with package Manager
 *** Gentoo
-This program, as of now, can be installed very easily on gentoo. Just follow these instructions
+This program, as of now, can be installed very easily on gentoo. Just follow these instructions:
 #+BEGIN_SRC shell
 git clone https://git.entheuer.de/emma/Wallman.git
 doas eselect repository create wallman
 doas cp -rf Wallman/distfiles/Gentoo/wallman /var/db/repos/
 doas emerge -av wallman
 #+END_SRC
+A proper portage overlay will be created soon so that updates can be handled automatically.
 
 *** Arch Linux
 Support for Arch Linux will be added soon.
