@@ -25,11 +25,6 @@ Wallman currently has three main features:
 + setuptools
 + build
 
-** Installing with pip
-Wallman is available on PYPI. Simply run:
-#+BEGIN_SRC shell
-pip install wallman
-#+END_SRC
 
 ** Installing with package Manager
 *** Gentoo
@@ -42,10 +37,16 @@ doas emerge -av wallman
 #+END_SRC
 
 *** Arch Linux
-Support for Arch Linux will be added soon
+Support for Arch Linux will be added soon.
 
 *** Others
 I will potentially write a version for nixpkgs and will also bundle wallman as a flatpak.
+
+** Installing with pip
+Wallman is available on PyPI. Simply run:
+#+BEGIN_SRC shell
+pip install wallman
+#+END_SRC
 
 ** Installing manually
 + Clone this git repo
