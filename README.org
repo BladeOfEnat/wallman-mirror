@@ -32,7 +32,20 @@ pip install wallman
 #+END_SRC
 
 ** Installing with package Manager
-Versions in the AUR and an ebuild for Gentoo will be added soon. A flatpak and Nixpkgs version are on the horizon, too.
+*** Gentoo
+This program, as of now, can be installed very easily on gentoo. Just follow these instructions
+#+BEGIN_SRC shell
+git clone https://git.entheuer.de/emma/Dotfiles.git
+doas eselect repository create wallman
+doas cp -rf Wallman/distfiles/Gentoo/wallman /var/db/repos/
+doas emerge -av wallman
+#+END_SRC
+
+*** Arch Linux
+Support for Arch Linux will be added soon
+
+*** Others
+I will potentially write a version for nixpkgs and will also bundle wallman as a flatpak.
 
 ** Installing manually
 + Clone this git repo
