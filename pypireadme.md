@@ -1,38 +1,38 @@
 
 # Table of Contents
 
-1.  [Overwiev](#org2f278b8)
-    1.  [What is this?](#org388817f)
-    2.  [What can it do?](#org181b8b7)
-2.  [Installation](#org9472446)
-    1.  [Depedencies](#org5977b9f)
-        1.  [Always Required](#org3f4fbec)
-        2.  [Optional](#org66e727c)
-        3.  [Build dependencies](#org818620a)
-    2.  [Installing with package Manager](#orgb41bd96)
-        1.  [Gentoo](#org135d2b8)
-        2.  [Arch Linux](#org1d65d77)
-        3.  [Others](#org32866d5)
-    3.  [Installing with pip](#org59bd85f)
-    4.  [Installing manually](#orgf93bb3e)
-3.  [Configuration](#orgd8c9052)
-    1.  [TOML Dictionaries](#org059100a)
-        1.  [general](#orge724ab7)
-        2.  [changing<sub>times</sub>](#orgac9b284)
-        3.  [The other dictionaries](#org2f91798)
-4.  [TODOs](#orgab8e139)
-    1.  [Structuring](#orga5d5528)
-    2.  [Technical Details](#org8559da1)
-    3.  [Features](#org5a7f88b)
+1.  [Overwiev](#org054ef0d)
+    1.  [What is this?](#orgbf4dad3)
+    2.  [What can it do?](#orgdf86200)
+2.  [Installation](#orge115851)
+    1.  [Depedencies](#org1c920d8)
+        1.  [Always Required](#org5a03048)
+        2.  [Optional](#org2bb7a20)
+        3.  [Build dependencies](#orgbdbc04d)
+    2.  [Installing with package Manager](#org3f3b4a9)
+        1.  [Gentoo](#orgcfe6102)
+        2.  [Arch Linux](#org4adff79)
+        3.  [Others](#orgdcb0d42)
+    3.  [Installing with pip](#org41ac4c9)
+    4.  [Installing manually](#org88055b7)
+3.  [Configuration](#orgc0a8c31)
+    1.  [TOML Dictionaries](#orgc09a1b5)
+        1.  [general](#org8297129)
+        2.  [changing<sub>times</sub>](#org5f9734c)
+        3.  [The other dictionaries](#org4d41b53)
+4.  [TODOs](#org9f0b1f0)
+    1.  [Structuring](#org036190c)
+    2.  [Technical Details](#org35cda78)
+    3.  [Features](#org8250c51)
 
 
 
-<a id="org2f278b8"></a>
+<a id="org054ef0d"></a>
 
 # Overwiev
 
 
-<a id="org388817f"></a>
+<a id="orgbf4dad3"></a>
 
 ## What is this?
 
@@ -41,7 +41,7 @@ This version is an early Alpha. As of now, it supports the most important featur
 As such, please make absolutely sure you follow the instructions on how to write the config file very closely. I will implement better config handling with more meaningful error output in the future. For now, follow everything really closely and read the logs if needed. If you do that, it *should* work.
 
 
-<a id="org181b8b7"></a>
+<a id="orgdf86200"></a>
 
 ## What can it do?
 
@@ -52,17 +52,17 @@ Wallman currently has three main features:
 -   Settings Wallpapers at a specific time of the day
 
 
-<a id="org9472446"></a>
+<a id="orge115851"></a>
 
 # Installation
 
 
-<a id="org5977b9f"></a>
+<a id="org1c920d8"></a>
 
 ## Depedencies
 
 
-<a id="org3f4fbec"></a>
+<a id="org5a03048"></a>
 
 ### Always Required
 
@@ -71,14 +71,14 @@ Wallman currently has three main features:
 -   feh (Used for setting the wallpapers, hard dependency)
 
 
-<a id="org66e727c"></a>
+<a id="org2bb7a20"></a>
 
 ### Optional
 
 -   libnotify (for desktop notification support)
 
 
-<a id="org818620a"></a>
+<a id="orgbdbc04d"></a>
 
 ### Build dependencies
 
@@ -86,38 +86,40 @@ Wallman currently has three main features:
 -   build
 
 
-<a id="orgb41bd96"></a>
+<a id="org3f3b4a9"></a>
 
 ## Installing with package Manager
 
 
-<a id="org135d2b8"></a>
+<a id="orgcfe6102"></a>
 
 ### Gentoo
 
-This program, as of now, can be installed very easily on gentoo. Just follow these instructions
+This program, as of now, can be installed very easily on gentoo. Just follow these instructions:
 
     git clone https://git.entheuer.de/emma/Wallman.git
     doas eselect repository create wallman
     doas cp -rf Wallman/distfiles/Gentoo/wallman /var/db/repos/
     doas emerge -av wallman
 
+A proper portage overlay will be created soon so that updates can be handled automatically.
 
-<a id="org1d65d77"></a>
+
+<a id="org4adff79"></a>
 
 ### Arch Linux
 
 Support for Arch Linux will be added soon.
 
 
-<a id="org32866d5"></a>
+<a id="orgdcb0d42"></a>
 
 ### Others
 
 I will potentially write a version for nixpkgs and will also bundle wallman as a flatpak.
 
 
-<a id="org59bd85f"></a>
+<a id="org41ac4c9"></a>
 
 ## Installing with pip
 
@@ -126,7 +128,7 @@ Wallman is available on PyPI. Simply run:
     pip install wallman
 
 
-<a id="orgf93bb3e"></a>
+<a id="org88055b7"></a>
 
 ## Installing manually
 
@@ -145,21 +147,21 @@ Wallman is available on PyPI. Simply run:
 -   Profit
 
 
-<a id="orgd8c9052"></a>
+<a id="orgc0a8c31"></a>
 
 # Configuration
 
 This is a short guide on how to correctly configure wallman. Look in the sample config for additional context.
 
 
-<a id="org059100a"></a>
+<a id="orgc09a1b5"></a>
 
 ## TOML Dictionaries
 
 First of all, the config file is structured via different TOML dictionaries. There are two TOML dictionaries: general and changing<sub>times</sub> that must be present in every config. Aside from that, further dictionaries are needed depending on how wallman is configured. You need to create a dictionary with the name of each wallpaper set defined in the used<sub>sets</sub> list (more on that later). You should probably just configure wallman by editing the sample config as it is by far the easiest way to do it.
 
 
-<a id="orge724ab7"></a>
+<a id="org8297129"></a>
 
 ### general
 
@@ -177,14 +179,14 @@ In general, you need to always define 3 variables and you can optionally add two
     Wallpaper to be set if an error is found in the config. Defaults to None. If none is set and the config is written incorrectly, a ConfigError is raised and the program is exited. If an error in the config occurs but the fallback wallpaper has been defined, it will be set and wallman will exit with Code 1.
 
 
-<a id="orgac9b284"></a>
+<a id="org5f9734c"></a>
 
 ### changing<sub>times</sub>
 
 The changing<sub>times</sub> dictionary is used to specify the times of the day when your wallpaper is switched. The names of the keys do not matter here, the values must always be strings in the &ldquo;XX:YY:ZZ&rdquo; 24 hour time system. use 00:00:00 for midnight. Note that XX should be in the range of 00-23 and YY and ZZ should be in the range of 00-59.
 
 
-<a id="org2f91798"></a>
+<a id="org4d41b53"></a>
 
 ### The other dictionaries
 
@@ -192,12 +194,12 @@ The other dictionaries must always have the names of the wallpaper sets from use
 The keys in the dictionary once again do not matter, the names of the keys in each dictionary must be strings and be absolute paths. They should not include spaces unless prefaced by a backslash.
 
 
-<a id="orgab8e139"></a>
+<a id="org9f0b1f0"></a>
 
 # TODOs
 
 
-<a id="orga5d5528"></a>
+<a id="org036190c"></a>
 
 ## Structuring
 
@@ -205,7 +207,7 @@ The keys in the dictionary once again do not matter, the names of the keys in ea
 -   Add documentation for developers
 
 
-<a id="org8559da1"></a>
+<a id="org35cda78"></a>
 
 ## Technical Details
 
@@ -215,7 +217,7 @@ The keys in the dictionary once again do not matter, the names of the keys in ea
 -   Drop the feh dependecy and set wallpapers using pywlroots or python-xlib
 
 
-<a id="org5a7f88b"></a>
+<a id="org8250c51"></a>
 
 ## Features
 
