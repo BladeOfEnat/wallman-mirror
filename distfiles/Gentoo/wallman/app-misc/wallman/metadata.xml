@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "https://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+  <maintainer type="person">
+    <name>Emma Nora Theuer</name>	  
+    <email>gentoo@entheuer.de</email>
+  </maintainer>
+  <upstream>
+    <remote-id type="pypi">Wallman</remote-id>
+  </upstream>
+  <longdescription>
+    Wallman is a small python program meant to bring dynamic wallpapers 
+    to standalone X11 Window managers and Wayland compositors.
+    It uses APScheduler in the background. For setting wallpaperss
+    It currently relies on feh in the background. libnotify is used for
+    Desktop notifications.
+
+    Wallman reads it's configuration data from a TOML file and logs to
+    ~/.local/share/wallman/wallman.log
+  </longdescription>
+</pkgmetadata>
