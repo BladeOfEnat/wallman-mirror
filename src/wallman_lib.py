@@ -10,7 +10,7 @@ from apscheduler.triggers.cron import CronTrigger
 # setup logging
 chdir(str(getenv("HOME")) + "/.local/share/wallman/")
 logger = logging.getLogger(__name__)
-logging.basicConfig(filename="wallman.log", encoding="utf-8", level=logging.WARNING)
+logging.basicConfig(filename="wallman.log", encoding="utf-8", level=logging.DEBUG)
 
 # read config
         # a = list(data["changing_times"].values())
@@ -62,67 +62,79 @@ class ConfigValidity(_ConfigLib):
         else:
             logger.warning("No fallback wallpaper has been provided. If the config is written incorrectly, the program will not be able to be executed.")
 
-    def _check_wallpapers_per_set_and_changing_times(self) -> None:
+    def _check_wallpapers_per_set_and_changing_times(self) -> bool:
         # Check if the amount of wallpapers_per_set and given changing times match
         if self.config_total_changing_times == self.config_wallpapers_per_set:
             logger.debug("The amount of changing times and wallpapers per set is set correctly")
+            return True
         else:
             try:
                 self._set_fallback_wallpaper()
                 logger.error("The amount of changing_times and the amount of wallpapers_per_set does not much, the fallback wallpaper has been set.")
                 print("ERROR: The amount of changing_times and the amount of wallpapers_per_set does not much, the fallback wallpaper has been set.")
-                exit(1)
+                return False
             except ConfigError:
                 logger.critical("The amount of changing times and the amount of wallpapers per set does not match, exiting...")
                 raise ConfigError("Please provide an amount of changing_times equal to wallpapers_per_set, exiting...")
 
-    def _check_general_validity(self) -> None:
+    def _check_general_validity(self) -> bool:
         if len(self.config_general) < 3:
             try:
                 self._set_fallback_wallpaper()
                 logger.error("An insufficient amount of elements has been provided for general, the fallback wallpaper has been set.")
                 print("ERROR: An insufficient amount of wallpapers has been provided for general, the fallback wallpaper has been set.")
-                exit(1)
+                return False
             except ConfigError:
                 logger.critical("An insufficient amount of elements for general has been provided, exiting...")
                 raise ConfigError("general should have at least 3 elements, exiting...")
 
-    def _check_wallpaper_dicts(self)-> None:
+        else:
+            logger.debug("A valid amount of options has been provided in general")
+            return True
+
+    def _check_wallpaper_dicts(self) -> bool:
         # This block checks if a dictionary for each wallpaper set exists
         for wallpaper_set in self.config_used_sets:
             if wallpaper_set in self.config_file:
                 logger.debug(f"The dictionary {wallpaper_set} has been found in config.")
+                return True
             else:
                 try:
                     self._set_fallback_wallpaper()
                     logger.error(f"The dictionary {wallpaper_set} has not been found in the config, the fallback wallpaper has been set.")
                     print(f"ERROR: The dictionary {wallpaper_set} has not been found in the config, the fallback wallpaper has been set.")
-                    exit(1)
+                    return False
                 except ConfigError:
                     logger.critical(f"No dictionary {wallpaper_set} has been found in the config exiting...")
                     raise ConfigError(f"The dictionary {wallpaper_set} has not been found in the config, exiting...")
 
-    def _check_wallpaper_amount(self) -> None:
+    def _check_wallpaper_amount(self) -> bool:
         # This block checks if if each wallpaper set dictionary provides enough wallpapers to satisfy wallpapers_per_set
         for wallpaper_set in self.config_used_sets:
             if len(self.config_file[wallpaper_set]) == self.config_wallpapers_per_set:
                 logger.debug(f"Dictionary {wallpaper_set} has sufficient values.")
+                return True
             else:
                 try:
                     self._set_fallback_wallpaper()
                     logger.error(f"The Dictionary {wallpaper_set} does not have sufficient entries, the fallback wallpaper has been set.")
                     print(f"ERROR: The Dictionaty {wallpaper_set} does not have sufficient entries, the fallback wallpaper has been set.")
-                    exit(1)
+                    return False
                 except ConfigError:
                     logger.critical(f"Dictionary {wallpaper_set} does not have sufficient entries, exciting...")
                     raise ConfigError(f"Dictionary {wallpaper_set} does not have the correct amount of entries, exciting...")
 
     def validate_config(self) -> None:
-        self._check_fallback_wallpaper()
-        self._check_wallpapers_per_set_and_changing_times()
-        self._check_general_validity()
-        self._check_wallpaper_dicts()
-        self._check_wallpaper_amount()
+        if not self._check_fallback_wallpaper():
+            exit(1)
+        if not self._check_wallpapers_per_set_and_changing_times():
+            exit(1)
+        if not self._check_general_validity():
+            exit(1)
+        if not self._check_wallpaper_dicts():
+            exit(1)
+        if not self._check_wallpaper_amount():
+            exit(1)
         logger.debug("The config file has been validated successfully (No Errors)")
 
 class WallpaperLogic(_ConfigLib):
