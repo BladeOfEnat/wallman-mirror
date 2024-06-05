@@ -10,7 +10,7 @@ from apscheduler.triggers.cron import CronTrigger
 # setup logging
 chdir(str(getenv("HOME")) + "/.local/share/wallman/")
 logger = logging.getLogger(__name__)
-logging.basicConfig(filename="wallman.log", encoding="utf-8", level=logging.DEBUG)
+logging.basicConfig(filename="wallman.log", encoding="utf-8", level=logging.WARNING)
 
 # read config
         # a = list(data["changing_times"].values())
@@ -160,11 +160,26 @@ class WallpaperLogic(_ConfigLib):
         else:
             return start <= x or x < end
 
+    def _check_system_exitcode(self, code) -> None:
+        if code != 0:
+            try:
+                self.set_fallback_wallpaper()
+                logger.error(f"The wallpaper {self.wallpaper_list[time_range]} has not been found, the fallback wallpaper has been set. Future wallpapers will still attempted to be set.")
+                print(f"ERROR: The wallpaper {self.wallpaper_list[time_range]} has not been found, the fallback wallpaper has been set. Future wallpapers will still attempted to be set.")
+                return False
+            except ConfigError:
+                logger.error(f"The wallpaper {self.wallpaper_list[time_range]} has not been found and no fallback wallpaper has been set. Future wallpapers will still attempted to be set.")
+                print(f"ERROR: The wallpaper {self.wallpaper_list[time_range]} has not been found and no fallback wallpaper has been set. Future wallpapers will still attempted to be set.")
+                return False
+        else:
+            return True
+
+
     def _notify_user(self):
         system("notify-send 'Wallman' 'A new Wallpaper has been set.'")
         logger.debug("Sent desktop notification.")
 
-    def set_wallpaper_by_time(self) -> None:
+    def set_wallpaper_by_time(self) -> bool:
         # Ensure use of a consistent wallpaper set
         if self.chosen_wallpaper_set is False:
             self._choose_wallpaper_set()
@@ -173,16 +188,19 @@ class WallpaperLogic(_ConfigLib):
             clean_time_two = self._clean_times(time_range + 1)
             # Check if the current time is between a given and the following changing time and if so, set that wallpaper. If not, keep trying.
             if self._time_in_range(time(int(clean_time[0]), int(clean_time[1]), int(clean_time[2])), time(int(clean_time_two[0]), int(clean_time_two[1]), int(clean_time_two[2])), datetime.now().time()):
-                system(f"feh --bg-scale --no-fehbg {self.wallpaper_list[time_range]}")
+                exitcode = system(f"feh --bg-scale --no-fehbg --quiet {self.wallpaper_list[time_range]}")
+                has_wallpaper_been_set = self._check_system_exitcode(exitcode)
                 if self.config_notify:
                     self._notify_user()
-                return
+                return has_wallpaper_been_set
             else:
                 continue
 
-        system(f"feh --bg-scale --no-fehbg {self.wallpaper_list[-1]}")
+        exitcode = system(f"feh --bg-scale --no-fehbg {self.wallpaper_list[-1]}")
+        has_wallpaper_been_set = self._check_system_exitcode(exitcode)
         if self.config_notify:
             self._notify_user()
+        return has_wallpaper_been_set
 
     def schedule_wallpapers(self):
         scheduler = BlockingScheduler()
