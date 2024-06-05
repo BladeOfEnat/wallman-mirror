@@ -80,7 +80,7 @@ In general, you need to always define 3 variables and you can optionally add two
 + Optional: notify: bool
     This defaults to "false". Enable to set send a desktop notification when the wallpaper is changed. The program will still work correctly, even if this option is not defined at all.
 + Optional: fallback_wallpaper: bool
-    Wallpaper to be set if an error is found in the config. Defaults to None. If none is set and the config is written incorrectly, a ConfigError is raised and the program is exited. If an error in the config occurs but the fallback wallpaper has been defined, it will be set and wallman will exit with Code 1.
+    Wallpaper to be set if an error is found in the config or the wallpaper intended to be set cannot be found. Defaults to None. If none is set and the config has been written incorrectly, a ConfigError is raised and the program is exited. If an error in the config occurs but the fallback wallpaper has been defined, it will be set and wallman will exit with Code 1.
 
 *** changing_times
 The changing_times dictionary is used to specify the times of the day when your wallpaper is switched. The names of the keys do not matter here, the values must always be strings in the "XX:YY:ZZ" 24 hour time system. use 00:00:00 for midnight. Note that XX should be in the range of 00-23 and YY and ZZ should be in the range of 00-59.
@@ -102,7 +102,6 @@ The keys in the dictionary once again do not matter, the names of the keys in ea
 + Drop the feh dependecy and set wallpapers using pywlroots or python-xlib
 
 ** Features
-+ Add support for setting a fallback wallpaper if a wallpaper the user set is not found
 + Add support for wallpapers that dynamically change with the time of day (Morning, noon, evening, night or light levels) rather than to times set in the config
 + Add support for wallpapers that change by the weather
 + Add support for live wallpapers
