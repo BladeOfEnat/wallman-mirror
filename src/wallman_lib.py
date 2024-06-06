@@ -10,7 +10,7 @@ from apscheduler.triggers.cron import CronTrigger
 # setup logging
 chdir(str(getenv("HOME")) + "/.local/share/wallman/")
 logger = logging.getLogger(__name__)
-logging.basicConfig(filename="wallman.log", encoding="utf-8", level=logging.WARNING)
+logging.basicConfig(filename="wallman.log", encoding="utf-8", level=logging.DEBUG)
 
 # read config
         # a = list(data["changing_times"].values())
@@ -59,8 +59,10 @@ class ConfigValidity(_ConfigLib):
     def _check_fallback_wallpaper(self):
         if self.config_general["fallback_wallpaper"]:
             logger.debug("A fallback wallpaper has been defined.")
+            return True
         else:
             logger.warning("No fallback wallpaper has been provided. If the config is written incorrectly, the program will not be able to be executed.")
+            return False
 
     def _check_wallpapers_per_set_and_changing_times(self) -> bool:
         # Check if the amount of wallpapers_per_set and given changing times match
@@ -126,7 +128,7 @@ class ConfigValidity(_ConfigLib):
 
     def validate_config(self) -> None:
         if not self._check_fallback_wallpaper():
-            exit(1)
+            pass
         if not self._check_wallpapers_per_set_and_changing_times():
             exit(1)
         if not self._check_general_validity():
@@ -188,6 +190,7 @@ class WallpaperLogic(_ConfigLib):
             clean_time_two = self._clean_times(time_range + 1)
             # Check if the current time is between a given and the following changing time and if so, set that wallpaper. If not, keep trying.
             if self._time_in_range(time(int(clean_time[0]), int(clean_time[1]), int(clean_time[2])), time(int(clean_time_two[0]), int(clean_time_two[1]), int(clean_time_two[2])), datetime.now().time()):
+                system(f"feh --bg-scale --no-fehbg --quiet {self.wallpaper_list[time_range]}")
                 exitcode = system(f"feh --bg-scale --no-fehbg --quiet {self.wallpaper_list[time_range]}")
                 has_wallpaper_been_set = self._check_system_exitcode(exitcode)
                 if self.config_notify:
@@ -196,6 +199,7 @@ class WallpaperLogic(_ConfigLib):
             else:
                 continue
 
+        system(f"feh --bg-scale --no-fehbg {self.wallpaper_list[-1]}")
         exitcode = system(f"feh --bg-scale --no-fehbg {self.wallpaper_list[-1]}")
         has_wallpaper_been_set = self._check_system_exitcode(exitcode)
         if self.config_notify:
