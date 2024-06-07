@@ -10,7 +10,7 @@ from apscheduler.triggers.cron import CronTrigger
 # setup logging
 chdir(str(getenv("HOME")) + "/.local/share/wallman/")
 logger = logging.getLogger(__name__)
-logging.basicConfig(filename="wallman.log", encoding="utf-8", level=logging.WARNING)
+logging.basicConfig(filename="wallman.log", encoding="utf-8", level=logging.DEBUG)
 
 # read config
         # a = list(data["changing_times"].values())
@@ -126,7 +126,7 @@ class ConfigValidity(_ConfigLib):
                     logger.critical(f"Dictionary {wallpaper_set} does not have sufficient entries, exciting...")
                     raise ConfigError(f"Dictionary {wallpaper_set} does not have the correct amount of entries, exciting...")
 
-    def validate_config(self) -> None:
+    def validate_config(self) -> bool:
         if not self._check_fallback_wallpaper():
             pass
         if not self._check_wallpapers_per_set_and_changing_times():
@@ -138,6 +138,7 @@ class ConfigValidity(_ConfigLib):
         if not self._check_wallpaper_amount():
             exit(1)
         logger.debug("The config file has been validated successfully (No Errors)")
+        return True
 
 class WallpaperLogic(_ConfigLib):
     def __init__(self):
@@ -162,7 +163,7 @@ class WallpaperLogic(_ConfigLib):
         else:
             return start <= x or x < end
 
-    def _check_system_exitcode(self, code) -> None:
+    def _check_system_exitcode(self, code) -> bool:
         if code != 0:
             try:
                 self.set_fallback_wallpaper()
