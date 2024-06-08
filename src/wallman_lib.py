@@ -166,13 +166,13 @@ class WallpaperLogic(_ConfigLib):
     def _check_system_exitcode(self, code) -> bool:
         if code != 0:
             try:
-                self.set_fallback_wallpaper()
-                logger.error(f"The wallpaper {self.wallpaper_list[time_range]} has not been found, the fallback wallpaper has been set. Future wallpapers will still attempted to be set.")
-                print(f"ERROR: The wallpaper {self.wallpaper_list[time_range]} has not been found, the fallback wallpaper has been set. Future wallpapers will still attempted to be set.")
+                self._set_fallback_wallpaper()
+                logger.error("The wallpaper attempted to be set has not been found, the fallback wallpaper has been set. Future wallpapers will still attempted to be set.")
+                print("ERROR: The wallpaper attempted to be set has not been found, the fallback wallpaper has been set. Future wallpapers will still attempted to be set.")
                 return False
             except ConfigError:
-                logger.error(f"The wallpaper {self.wallpaper_list[time_range]} has not been found and no fallback wallpaper has been set. Future wallpapers will still attempted to be set.")
-                print(f"ERROR: The wallpaper {self.wallpaper_list[time_range]} has not been found and no fallback wallpaper has been set. Future wallpapers will still attempted to be set.")
+                logger.error("The wallpaper attempted to be set has not been found and no fallback wallpaper has been set. Future wallpapers will still attempted to be set.")
+                print("ERROR: The wallpaper attempted to be set has not been found and no fallback wallpaper has been set. Future wallpapers will still attempted to be set.")
                 return False
         else:
             return True
