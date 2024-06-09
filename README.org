@@ -35,7 +35,7 @@ doas eselect repository create wallman
 doas cp -rf Wallman/distfiles/Gentoo/wallman /var/db/repos/
 doas emerge -av wallman
 #+END_SRC
-A proper portage overlay will be created soon so that updates can be handled automatically.
+A proper portage overlay will be created soon, so that updates can be handled automatically.
 
 *** Arch Linux
 Support for Arch Linux will be added soon.
@@ -62,7 +62,6 @@ doas cp src/wallman_lib.py /usr/bin/wallman_lib.py
 doas chmod +x /usr/bin/wallman
 #+END_SRC
 + Edit the sample config
-+ (Optional): Adjust the loglevel in Source Code to your liking.
 + Profit
 
 * Configuration
@@ -70,7 +69,7 @@ This is a short guide on how to correctly configure wallman. Look in the sample 
 ** TOML Dictionaries
 First of all, the config file is structured via different TOML dictionaries. There are two TOML dictionaries: general and changing_times that must be present in every config. Aside from that, further dictionaries are needed depending on how wallman is configured. You need to create a dictionary with the name of each wallpaper set defined in the used_sets list (more on that later). You should probably just configure wallman by editing the sample config as it is by far the easiest way to do it.
 *** general
-In general, you need to always define 3 variables and you can optionally add two more:
+In general, you need to always define 3 variables and you can optionally add three more:
 + enable_wallpaper_sets: bool
     A simple switch that states if you want to use different sets of wallpapers or not.
 + used_sets: list
@@ -80,7 +79,9 @@ In general, you need to always define 3 variables and you can optionally add two
 + Optional: notify: bool
     This defaults to "false". Enable to set send a desktop notification when the wallpaper is changed. The program will still work correctly, even if this option is not defined at all.
 + Optional: fallback_wallpaper: bool
-    Wallpaper to be set if an error is found in the config or the wallpaper intended to be set cannot be found. Defaults to None. If none is set and the config has been written incorrectly, a ConfigError is raised and the program is exited. If an error in the config occurs but the fallback wallpaper has been defined, it will be set and wallman will exit with Code 1.
+    Wallpaper to be set if an error is found in the config or the wallpaper intended to be set cannot be found. Defaults to None. If none is set and the config has been written incorrectly, a ConfigError is raised and the program is exited. If an error in the config occurs but the fallback wallpaper has been defined, it will be set and wallman will exit with Code 1. If The config is written correctly but the wallpaper intended to be set can't be found, wallman will set the fallback wallpaper and continue to try setting future wallpapers.
++ Optional: loglevel: string
+    Loglevel to be used by wallman. Defaults to WARNING. Choices MUST be DEBUG, INFO, WARNING, ERROR or CRITICAL. Using any capitalization is valid, all caps is reccomended. Wallman will crash if a value is specified that is not one of the specified ones.
 
 *** changing_times
 The changing_times dictionary is used to specify the times of the day when your wallpaper is switched. The names of the keys do not matter here, the values must always be strings in the "XX:YY:ZZ" 24 hour time system. use 00:00:00 for midnight. Note that XX should be in the range of 00-23 and YY and ZZ should be in the range of 00-59.
@@ -98,7 +99,6 @@ The keys in the dictionary once again do not matter, the names of the keys in ea
 ** Technical Details
 + Improve Modularity
 + Make the enabled flag in wallpaper_sets actually useful by making the used_sets field optional
-+ Add support for different loglevels in the config file or as a command line argument
 + Drop the feh dependecy and set wallpapers using pywlroots or python-xlib
 
 ** Features
