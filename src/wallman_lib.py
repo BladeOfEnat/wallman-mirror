@@ -10,7 +10,7 @@ from apscheduler.triggers.cron import CronTrigger
 # setup logging
 chdir(str(getenv("HOME")) + "/.local/share/wallman/")
 logger = logging.getLogger(__name__)
-logging.basicConfig(filename="wallman.log", encoding="utf-8", level=logging.WARNING)
+logging.basicConfig(filename="wallman.log", encoding="utf-8", level=logging.DEBUG)
 
 # read config
         # a = list(data["changing_times"].values())
@@ -167,14 +167,15 @@ class WallpaperLogic(_ConfigLib):
         if code != 0:
             try:
                 self._set_fallback_wallpaper()
-                logger.error("The wallpaper attempted to be set has not been found, the fallback wallpaper has been set. Future wallpapers will still attempted to be set.")
-                print("ERROR: The wallpaper attempted to be set has not been found, the fallback wallpaper has been set. Future wallpapers will still attempted to be set.")
+                logger.error(f"The wallpaper {self.wallpaper_list[self.current_time_range]} has not been found, the fallback wallpaper has been set. Future wallpapers will still attempted to be set.")
+                print(f"ERROR: The wallpaper {self.wallpaper_list[self.current_time_range]} has not been found, the fallback wallpaper has been set. Future wallpapers will still attempted to be set.")
                 return False
             except ConfigError:
-                logger.error("The wallpaper attempted to be set has not been found and no fallback wallpaper has been set. Future wallpapers will still attempted to be set.")
-                print("ERROR: The wallpaper attempted to be set has not been found and no fallback wallpaper has been set. Future wallpapers will still attempted to be set.")
+                logger.error(f"The wallpaper {self.wallpaper_list[self.current_time_range]} has not been found and no fallback wallpaper has been set. Future wallpapers will still attempted to be set.")
+                print(f"ERROR: The wallpaper {self.wallpaper_list[self.current_time_range]} has not been found and no fallback wallpaper has been set. Future wallpapers will still attempted to be set.")
                 return False
         else:
+            logger.debug(f"The wallpaper {self.wallpaper_list[self.current_time_range]} has been set.")
             return True
 
 
@@ -187,6 +188,7 @@ class WallpaperLogic(_ConfigLib):
         if self.chosen_wallpaper_set is False:
             self._choose_wallpaper_set()
         for time_range in range(self.config_total_changing_times - 1):
+            self.current_time_range = time_range # Store current time for better debugging output
             clean_time = self._clean_times(time_range)
             clean_time_two = self._clean_times(time_range + 1)
             # Check if the current time is between a given and the following changing time and if so, set that wallpaper. If not, keep trying.
