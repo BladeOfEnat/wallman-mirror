@@ -8,13 +8,7 @@ from apscheduler.schedulers.blocking import BlockingScheduler
 from apscheduler.triggers.cron import CronTrigger
 
 # setup logging
-chdir(str(getenv("HOME")) + "/.local/share/wallman/")
 logger = logging.getLogger(__name__)
-logging.basicConfig(filename="wallman.log", encoding="utf-8", level=logging.WARNING)
-
-# read config
-        # a = list(data["changing_times"].values())
-        # print(a[0])
 
 class ConfigError(Exception):
     pass
@@ -38,11 +32,22 @@ class _ConfigLib:
         self.config_used_sets: list = self.config_general["used_sets"]
         self.config_wallpapers_per_set: int = self.config_general["wallpapers_per_set"]
         self.config_total_changing_times: int = len(self.config_changing_times)
+        self.config_log_level: str = self.config_general.get("loglevel", "WARNING").upper()
         try:
-            self.config_notify = self.config_general["notify"]
+            self.config_notify: bool = self.config_general["notify"]
         except KeyError:
             self.config_notify = False
             logger.warning("'notify' is not set in dictionary general in the config file, defaulting to 'false'.")
+
+        self._set_log_level()
+
+    def _set_log_level(self):
+        global logging
+        global logger
+        chdir(str(getenv("HOME")) + "/.local/share/wallman/")
+        numeric_level = getattr(logging, self.config_log_level, logging.WARNING)
+        logger.setLevel(numeric_level)
+        logging.basicConfig(filename="wallman.log", encoding="utf-8", level=numeric_level)
 
     def _set_fallback_wallpaper(self):
         if self.config_general["fallback_wallpaper"]:
@@ -175,7 +180,7 @@ class WallpaperLogic(_ConfigLib):
                 print(f"ERROR: The wallpaper {self.wallpaper_list[self.current_time_range]} has not been found and no fallback wallpaper has been set. Future wallpapers will still attempted to be set.")
                 return False
         else:
-            logger.debug(f"The wallpaper {self.wallpaper_list[self.current_time_range]} has been set.")
+            logger.info(f"The wallpaper {self.wallpaper_list[self.current_time_range]} has been set.")
             return True
 
 
