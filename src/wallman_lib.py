@@ -19,8 +19,6 @@ class _ConfigLib:
         with open("wallman.toml", "rb") as config_file:
             data = tomllib.load(config_file)
             return data
-            # a = list(data["changing_times"].values())
-            # print(a[0])
 
     def __init__(self):
         self.config_file: dict = self._initialize_config() # Full config
@@ -39,6 +37,7 @@ class _ConfigLib:
             self.config_notify = False
             logger.warning("'notify' is not set in dictionary general in the config file, defaulting to 'false'.")
 
+        # Setup logging
         self._set_log_level()
 
     def _set_log_level(self):
@@ -182,7 +181,6 @@ class WallpaperLogic(_ConfigLib):
         else:
             logger.info(f"The wallpaper {self.wallpaper_list[self.current_time_range]} has been set.")
             return True
-
 
     def _notify_user(self):
         system("notify-send 'Wallman' 'A new Wallpaper has been set.'")
