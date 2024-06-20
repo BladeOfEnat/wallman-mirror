@@ -30,7 +30,7 @@ class _ConfigLib:
         self.config_used_sets: list = self.config_general["used_sets"]
         self.config_wallpapers_per_set: int = self.config_general["wallpapers_per_set"]
         self.config_total_changing_times: int = len(self.config_changing_times)
-        self.config_log_level: str = self.config_general.get("loglevel", "WARNING").upper()
+        self.config_log_level: str = self.config_general.get("loglevel", "INFO").upper()
         try:
             self.config_notify: bool = self.config_general["notify"]
         except KeyError:
@@ -44,7 +44,7 @@ class _ConfigLib:
         global logging
         global logger
         chdir(str(getenv("HOME")) + "/.local/share/wallman/")
-        numeric_level = getattr(logging, self.config_log_level, logging.WARNING)
+        numeric_level = getattr(logging, self.config_log_level, logging.INFO)
         logger.setLevel(numeric_level)
         logging.basicConfig(filename="wallman.log", encoding="utf-8", level=numeric_level)
 
