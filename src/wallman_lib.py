@@ -98,7 +98,7 @@ class ConfigValidity(_ConfigLib):
             logger.debug("A valid amount of options has been provided in general")
             return True
 
-    def _check_wallpaper_dicts(self) -> bool:
+    def _check_wallpaper_dicts(self):
         # This block checks if a dictionary for each wallpaper set exists
         for wallpaper_set in self.config_used_sets:
             if wallpaper_set in self.config_file:
@@ -114,7 +114,7 @@ class ConfigValidity(_ConfigLib):
                     logger.critical(f"No dictionary {wallpaper_set} has been found in the config exiting...")
                     raise ConfigError(f"The dictionary {wallpaper_set} has not been found in the config, exiting...")
 
-    def _check_wallpaper_amount(self) -> bool:
+    def _check_wallpaper_amount(self):
         # This block checks if if each wallpaper set dictionary provides enough wallpapers to satisfy wallpapers_per_set
         for wallpaper_set in self.config_used_sets:
             if len(self.config_file[wallpaper_set]) == self.config_wallpapers_per_set:
