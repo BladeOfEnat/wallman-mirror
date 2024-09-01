@@ -12,6 +12,7 @@ Wallman currently has three main features:
 + Reading configuration details from a TOML file
 + Choosing from a set of Wallpapers and then setting the rest of the wallpapers accordingly
 + Settings Wallpapers at a specific time of the day
++ Be controlled via a systray
 
 * Installation
 ** Depedencies
@@ -21,6 +22,8 @@ Wallman currently has three main features:
 + feh (Used for setting the wallpapers, hard dependency)
 *** Optional
 + libnotify (for desktop notification support)
++ pillow (For systray support)
++ pystray (For systray support)
 *** Build dependencies
 + setuptools
 + build
@@ -50,13 +53,16 @@ pip install wallman
 #+END_SRC
 
 ** Installing manually
++ Install libnotify and feh from your package manager
 #+BEGIN_SRC shell
+pip install APScheduler pystray pillow
 git clone https://git.entheuer.de/emma/Wallman.git
 cd Wallman/
 mkdir -p ~/.local/share/wallman
 mkdir -p ~/.config/wallman
 touch ~/.local/share/wallman/wallman.log
 cp sample_config.toml ~/.config/wallman/wallman.toml
+cp systrayIcon.jpg ~/.config/wallman/systrayIcon.jpg
 doas cp src/wallman.py /usr/bin/wallman
 doas cp src/wallman_lib.py /usr/bin/wallman_lib.py
 doas chmod +x /usr/bin/wallman
@@ -82,6 +88,8 @@ In general, you need to always define 3 variables and you can optionally add thr
     Wallpaper to be set if an error is found in the config or the wallpaper intended to be set cannot be found. Defaults to None. If none is set and the config has been written incorrectly, a ConfigError is raised and the program is exited. If an error in the config occurs but the fallback wallpaper has been defined, it will be set and wallman will exit with Code 1. If The config is written correctly but the wallpaper intended to be set can't be found, wallman will set the fallback wallpaper and continue to try setting future wallpapers.
 + Optional: loglevel: string
     Loglevel to be used by wallman. Defaults to WARNING. Choices MUST be DEBUG, INFO, WARNING, ERROR or CRITICAL. Using any capitalization is valid, all caps is reccomended. Wallman will crash if a value is specified that is not one of the specified ones.
++ Optional: systray: bool
+    This defaults to "true". This enables support for a systray that has the features to re-set your wallpaper (Mostly useful if feh shits itself or if you want to set the correct wallpaper for a specific time of day after your device was suspended) without rerolling the wallpaper set used, a button to reroll and then re-set the wallpaper, as well as a Quit button. Disable this to save a very tiny amount of memory.
 
 *** changing_times
 The changing_times dictionary is used to specify the times of the day when your wallpaper is switched. The names of the keys do not matter here, the values must always be strings in the "XX:YY:ZZ" 24 hour time system. use 00:00:00 for midnight. Note that XX should be in the range of 00-23 and YY and ZZ should be in the range of 00-59.
@@ -97,7 +105,7 @@ The keys in the dictionary once again do not matter, the names of the keys in ea
 + Add documentation for developers
 
 ** Technical Details
-+ Improve Modularity
++ Improve Modularity (Partially done)
 + Make the enabled flag in wallpaper_sets actually useful by making the used_sets field optional
 + Drop the feh dependecy and set wallpapers using pywlroots or python-xlib
 
