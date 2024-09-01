@@ -4,11 +4,10 @@ from os import chdir, getenv, system
 import logging
 import tomllib
 from datetime import datetime, time
-from apscheduler.schedulers.blocking import BlockingScheduler
 from apscheduler.triggers.cron import CronTrigger
 
 # setup logging
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("wallman")
 
 class ConfigError(Exception):
     pass
@@ -36,9 +35,24 @@ class _ConfigLib:
         except KeyError:
             self.config_notify = False
             logger.warning("'notify' is not set in dictionary general in the config file, defaulting to 'false'.")
+        try:
+            self.config_systray = self.config_general["systray"]
+        except KeyError:
+            self.config_systray = True
+            logger.warning("'systray' is not set in the dictionary general in the config file, defaulting to 'true'.")
+
+
 
         # Setup logging
         self._set_log_level()
+        if self.config_systray:
+            self._initialize_systray()
+
+    def _initialize_systray(self):
+        try:
+            import wallman_systray
+        except (ImportError, FileNotFoundError):
+            self.config_systray = False
 
     def _set_log_level(self):
         global logging
@@ -212,11 +226,38 @@ class WallpaperLogic(_ConfigLib):
             self._notify_user()
         return has_wallpaper_been_set
 
-    def schedule_wallpapers(self):
-        scheduler = BlockingScheduler()
-        # Create a scheduled job for every changing time
-        for changing_time in range(len(self.config_changing_times)):
-            clean_time = self._clean_times(changing_time)
-            scheduler.add_job(self.set_wallpaper_by_time, trigger=CronTrigger(hour=clean_time[0], minute=clean_time[1], second=clean_time[2]))
-        scheduler.start()
-        logger.info("The scheduler has been started.")
+    def run_wallpapers(self):
+        def _schedule_background_wallpapers():
+            from apscheduler.schedulers.background import BackgroundScheduler
+            scheduler = BackgroundScheduler()
+            # Create a scheduled job for every changing time
+            for changing_time in range(len(self.config_changing_times)):
+                clean_time = self._clean_times(changing_time)
+                scheduler.add_job(self.set_wallpaper_by_time, trigger=CronTrigger(hour=clean_time[0], minute=clean_time[1], second=clean_time[2]))
+            scheduler.start()
+            logger.info("The background scheduler has been started.")
+            return scheduler
+
+        def _schedule_blocking_wallpapers():
+            from apscheduler.schedulers.blocking import BlockingScheduler
+            scheduler = BlockingScheduler()
+            # Create a scheduled job for every changing time
+            for changing_time in range(len(self.config_changing_times)):
+                clean_time = self._clean_times(changing_time)
+                scheduler.add_job(self.set_wallpaper_by_time, trigger=CronTrigger(hour=clean_time[0], minute=clean_time[1], second=clean_time[2]))
+            scheduler.start()
+            logger.info("The blocking scheduler has been started.")
+
+        if self.config_systray:
+            import wallman_systray as systray
+            from functools import partial
+            scheduler = _schedule_background_wallpapers()
+            menu = systray.Menu (
+                systray.item("Re-Set Wallpaper", partial(systray.set_wallpaper_again, callback=self.set_wallpaper_by_time)),
+                systray.item("Reroll Wallpapers", partial(systray.reroll_wallpapers, first_callback=self._choose_wallpaper_set, second_callback=self.set_wallpaper_by_time)),
+                systray.item("Quit", partial(systray.on_quit, callback=scheduler.shutdown))
+            )
+            icon =systray.Icon("wallman_icon", systray.icon_image, "My Tray Icon", menu)
+            icon.run()
+        else:
+            _schedule_blocking_wallpapers()
