@@ -1,2 +1,4 @@
 graft src
+graft icons
 include sample_config.toml
+exclude README.org
