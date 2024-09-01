@@ -6,7 +6,7 @@ def main():
     logic = wallman_lib.WallpaperLogic()
     validator.validate_config()
     logic.set_wallpaper_by_time()
-    logic.schedule_wallpapers()
+    logic.run_wallpapers()
 
 if __name__ == "__main__":
     main()
