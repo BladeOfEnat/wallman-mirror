@@ -58,13 +58,15 @@ pip install wallman
 pip install APScheduler pystray pillow
 git clone https://git.entheuer.de/emma/Wallman.git
 cd Wallman/
-mkdir -p ~/.local/share/wallman
+sudo mkdir -p /var/log/wallman
+sudo chmod 733 /var/log/wallman
 mkdir -p ~/.config/wallman
-touch ~/.local/share/wallman/wallman.log
 cp sample_config.toml ~/.config/wallman/wallman.toml
-cp systrayIcon.jpg ~/.config/wallman/systrayIcon.jpg
+doas mkdir -p /etc/wallman/
+cp -R icons/ /etc/wallman/
 doas cp src/wallman.py /usr/bin/wallman
 doas cp src/wallman_lib.py /usr/bin/wallman_lib.py
+doas cp src/wallman_systray.py /usr/bin/wallman_systray.py
 doas chmod +x /usr/bin/wallman
 #+END_SRC
 + Edit the sample config
@@ -87,7 +89,7 @@ In general, you need to always define 3 variables and you can optionally add thr
 + Optional: fallback_wallpaper: bool
     Wallpaper to be set if an error is found in the config or the wallpaper intended to be set cannot be found. Defaults to None. If none is set and the config has been written incorrectly, a ConfigError is raised and the program is exited. If an error in the config occurs but the fallback wallpaper has been defined, it will be set and wallman will exit with Code 1. If The config is written correctly but the wallpaper intended to be set can't be found, wallman will set the fallback wallpaper and continue to try setting future wallpapers.
 + Optional: loglevel: string
-    Loglevel to be used by wallman. Defaults to WARNING. Choices MUST be DEBUG, INFO, WARNING, ERROR or CRITICAL. Using any capitalization is valid, all caps is reccomended. Wallman will crash if a value is specified that is not one of the specified ones.
+    Loglevel to be used by wallman. Defaults to INFO. Choices MUST be DEBUG, INFO, WARNING, ERROR or CRITICAL. Using any capitalization is valid, all caps is reccomended. Wallman will crash if a value is specified that is not one of the specified ones.
 + Optional: systray: bool
     This defaults to "true". This enables support for a systray that has the features to re-set your wallpaper (Mostly useful if feh shits itself or if you want to set the correct wallpaper for a specific time of day after your device was suspended) without rerolling the wallpaper set used, a button to reroll and then re-set the wallpaper, as well as a Quit button. Disable this to save a very tiny amount of memory.
 
