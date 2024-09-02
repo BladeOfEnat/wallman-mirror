@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 from sys import exit
 from os import chdir, getenv, system
 import logging
@@ -42,7 +41,6 @@ class _ConfigLib:
             logger.warning("'systray' is not set in the dictionary general in the config file, defaulting to 'true'.")
 
 
-
         # Setup logging
         self._set_log_level()
         if self.config_systray:
@@ -57,7 +55,7 @@ class _ConfigLib:
     def _set_log_level(self):
         global logging
         global logger
-        chdir(str(getenv("HOME")) + "/.local/share/wallman/")
+        chdir("/var/log/wallman/")
         numeric_level = getattr(logging, self.config_log_level, logging.INFO)
         logger.setLevel(numeric_level)
         logging.basicConfig(filename="wallman.log", encoding="utf-8", level=numeric_level)
@@ -90,8 +88,8 @@ class ConfigValidity(_ConfigLib):
         else:
             try:
                 self._set_fallback_wallpaper()
-                logger.error("The amount of changing_times and the amount of wallpapers_per_set does not much, the fallback wallpaper has been set.")
-                print("ERROR: The amount of changing_times and the amount of wallpapers_per_set does not much, the fallback wallpaper has been set.")
+                logger.error("The amount of changing_times and the amount of wallpapers_per_set does not match, the fallback wallpaper has been set.")
+                print("ERROR: The amount of changing_times and the amount of wallpapers_per_set does not match, the fallback wallpaper has been set.")
                 return False
             except ConfigError:
                 logger.critical("The amount of changing times and the amount of wallpapers per set does not match, exiting...")
@@ -257,7 +255,7 @@ class WallpaperLogic(_ConfigLib):
                 systray.item("Reroll Wallpapers", partial(systray.reroll_wallpapers, first_callback=self._choose_wallpaper_set, second_callback=self.set_wallpaper_by_time)),
                 systray.item("Quit", partial(systray.on_quit, callback=scheduler.shutdown))
             )
-            icon =systray.Icon("wallman_icon", systray.icon_image, "My Tray Icon", menu)
+            icon = systray.Icon("wallman_icon", systray.icon_image, "My Tray Icon", menu)
             icon.run()
         else:
             _schedule_blocking_wallpapers()
