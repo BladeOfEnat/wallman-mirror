@@ -34,7 +34,7 @@ def on_quit(icon, item, callback):
     icon.stop()
 
 
-chdir("/etc/wallman/icons/systrayIcon")
+chdir("/etc/wallman/icons/")
 try:
     icon_image = Image.open("systrayIcon.jpg")
 except FileNotFoundError:
