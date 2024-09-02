@@ -243,8 +243,8 @@ class WallpaperLogic(_ConfigLib):
             for changing_time in range(len(self.config_changing_times)):
                 clean_time = self._clean_times(changing_time)
                 scheduler.add_job(self.set_wallpaper_by_time, trigger=CronTrigger(hour=clean_time[0], minute=clean_time[1], second=clean_time[2]))
-            scheduler.start()
             logger.info("The blocking scheduler has been started.")
+            scheduler.start()
 
         if self.config_systray:
             import wallman_systray as systray
